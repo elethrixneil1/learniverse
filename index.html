@@ -845,8 +845,8 @@
 
       <div class="content-grid" id="video-grid">
         <div class="video-item card">
-          <video controls poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80">
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          <video class="content-video" controls muted loop>
+            <source src="introduction to coding.mp4" type="video/mp4">
             Browser does not support video.
           </video>
           <div class="info">
@@ -855,12 +855,30 @@
           </div>
         </div>
         <div class="video-item card">
-          <video controls poster="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=600&q=80">
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          <video class="content-video" controls muted loop>
+            <source src="physics.mp4" type="video/mp4">
           </video>
           <div class="info">
             <h3>Physics Experiments</h3>
             <p>Explore fundamental physics concepts through interactive experiments and demonstrations.</p>
+          </div>
+        </div>
+        <div class="video-item card">
+          <video class="content-video" controls muted loop>
+            <source src="history.mp4" type="video/mp4">
+          </video>
+          <div class="info">
+            <h3>World History Overview</h3>
+            <p>Journey through key historical events and their impact on modern society.</p>
+          </div>
+        </div>
+        <div class="video-item card">
+          <video class="content-video" controls muted loop>
+            <source src="math.mp4" type="video/mp4">
+          </video>
+          <div class="info">
+            <h3>Advanced Mathematics</h3>
+            <p>Master complex mathematical concepts with step-by-step explanations and practice problems.</p>
           </div>
         </div>
       </div>
@@ -1039,6 +1057,19 @@
         fetchCommunityFeed('*');
       }
 
+      // Automatically play videos when navigating to the videos tab
+      const contentVideos = document.querySelectorAll('.content-video');
+      if (targetId === 'videos') {
+        contentVideos.forEach(video => {
+          video.play().catch(error => {
+            // Autoplay might be blocked by the browser if not muted or without user interaction
+            console.log("Autoplay was prevented by the browser:", error);
+          });
+        });
+      } else {
+        contentVideos.forEach(video => video.pause());
+      }
+
       // Close sidebar automatically on mobile after clicking a link
       if (window.innerWidth <= 768) {
         sidebar.classList.remove('open');
@@ -1068,7 +1099,7 @@
           <div class="typing-indicator" style="margin: 0 auto; justify-content: center; width: 100%;">
             <span></span><span></span><span></span>
           </div>
-          <p style="margin-top: 15px;">Searching for educational articles...</p>
+          <p style="margin-top: 15px;">Naghahanap ng mga artikulong pang-edukasyon...</p>
         </div>
       `;
 
@@ -1116,7 +1147,7 @@
         renderCards(allPosts, safeQuery);
       } catch (error) {
         console.error('API Fetch Error:', error);
-        feedGrid.innerHTML = `<p style="color: #ff4444; grid-column: 1 / -1; text-align: center;">Failed to load Educational API. Please check your connection.</p>`;
+        feedGrid.innerHTML = `<p style="color: #ff4444; grid-column: 1 / -1; text-align: center;">Nabigo ang pag-load ng Educational API. Pakisuri ang iyong koneksyon.</p>`;
       }
     }
 
@@ -1124,7 +1155,7 @@
       feedGrid.innerHTML = '';
       
       if (posts.length === 0) {
-        feedGrid.innerHTML = `<p style="color: #888; grid-column: 1 / -1; text-align: center; margin-top: 50px;">No information found for "${safeQuery}". Try another topic!</p>`;
+        feedGrid.innerHTML = `<p style="color: #888; grid-column: 1 / -1; text-align: center; margin-top: 50px;">Walang nahanap na impormasyon para sa "${safeQuery}". Sumubok ng ibang topic!</p>`;
         return;
       }
 
@@ -1141,7 +1172,7 @@
               </div>
               <h3 style="color: #9f4fff; margin: 10px 0 8px 0; font-size: 1.1rem; line-height: 1.3;">${post.title}</h3>
               <div class="text" style="font-size: 0.9rem; color: #cccccc; margin-bottom: 10px;">${post.snippet}</div>
-              <a href="https://en.wikipedia.org/?curid=${post.pageid}" target="_blank" style="color: #ce8eff; text-decoration: none; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; font-weight: bold;">Read more &rarr;</a>
+              <a href="https://en.wikipedia.org/?curid=${post.pageid}" target="_blank" style="color: #ce8eff; text-decoration: none; font-size: 0.85rem; margin-bottom: 15px; display: inline-block; font-weight: bold;">Magbasa nang higit pa &rarr;</a>
               <div class="actions">
                 <div class="actions-left">
                   <span class="action-btn">
@@ -1153,7 +1184,7 @@
                     ${post.comments}
                   </span>
                 </div>
-                <span class="action-btn" title="Save/Bookmark">
+                <span class="action-btn" title="I-save/I-bookmark">
                   <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                 </span>
               </div>
@@ -1214,8 +1245,8 @@
       contentDiv.className = 'content';
       contentDiv.innerHTML = `
         <h3 style="color:#9f4fff; margin-bottom:5px;">Educational Search: ${safeQuery}</h3>
-        <p style="color:#ccc; font-size:0.9rem;">Searched for educational articles.</p>
-        <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Just now</div>
+        <p style="color:#ccc; font-size:0.9rem;">Naghanap ng mga artikulong pang-edukasyon.</p>
+        <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Ngayon lang</div>
       `;
       
       leftDiv.appendChild(iconDiv);
@@ -1223,7 +1254,7 @@
       
       const delBtn = document.createElement('button');
       delBtn.className = 'btn-delete-history';
-      delBtn.title = 'Delete from history';
+      delBtn.title = 'Tanggalin sa history';
       delBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
       delBtn.onclick = () => itemDiv.remove();
       
@@ -1253,10 +1284,10 @@
       const safeQuery = query.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
       if (query.trim() === '*') {
-        feedTitle.textContent = "Educational Recommendations";
+        feedTitle.textContent = "Mga Rekomendasyong Pang-edukasyon";
         await fetchCommunityFeed('*');
       } else {
-        feedTitle.textContent = `Results for "${safeQuery}"`;
+        feedTitle.textContent = `Mga Resulta para sa "${safeQuery}"`;
         await fetchCommunityFeed(query);
       }
       
