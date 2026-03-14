@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learniverse AI</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #0f0f0f;
+      color: white;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #000000;
+      width: 200px;
+      padding: 20px 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #2d2d2d;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar .logo {
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 40px;
+      user-select: none;
+      background: linear-gradient(90deg, #9f4fff, #ce8eff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar nav {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 30px;
+    }
+
+    .sidebar nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .sidebar nav a svg {
+      margin-right: 12px;
+      fill: white;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      transition: fill 0.2s ease;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      color: #9f4fff; /* purple highlight */
+      background: rgba(159, 79, 255, 0.1);
+    }
+
+    .sidebar nav a:hover svg,
+    .sidebar nav a.active svg {
+      fill: #9f4fff;
+    }
+
+    .sidebar .new-project {
+      display: flex;
+      align-items: center;
+      color: #aaaaaa;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      padding: 8px 12px;
+    }
+
+    .sidebar .new-project svg {
+      margin-right: 8px;
+      width: 18px;
+      height: 18px;
+      fill: #aaaaaa;
+      flex-shrink: 0;
+    }
+
+    .sidebar .new-project:hover {
+      color: #9f4fff;
+    }
+
+    .sidebar .new-project:hover svg {
+      fill: #9f4fff;
+    }
+
+    /* Main content container */
+    .main-content {
+      flex: 1;
+      margin-left: 200px;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Views */
+    .page-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 80px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* User panel top right */
+    .user-panel {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #cccccc;
+      user-select: none;
+      z-index: 50;
+    }
+
+    .user-panel .avatar {
+      background: linear-gradient(135deg, #9f4fff, #8a2be2);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px #9f4fff88;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .user-panel .avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .user-panel .name {
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(90deg, #9f4fff, #8a2be2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .user-panel .status {
+      font-size: 11px;
+      color: #666666;
+      margin-left: -5px;
+      margin-top: 3px;
+    }
+
+    /* Home Specific Styles */
+    .main-logo-text {
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      margin-top: 40px;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(159, 79, 255, 0.4);
+    }
+
+    .logo-text {
+      color: #9f4fff;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1.3px;
+      margin-bottom: 30px;
+    }
+
+    .search-container {
+      width: 100%;
+      max-width: 500px;
+      background: #2a2a2a;
+      border-radius: 32px;
+      padding: 12px 25px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 0 15px #9f4fff66;
+      cursor: text;
+      transition: box-shadow 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .search-container:focus-within {
+      box-shadow: 0 0 25px #9f4fff99;
+    }
+
+    .search-container input[type="text"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      outline: none;
+    }
+
+    .mic-button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #c6c6c6;
+      transition: color 0.3s;
+    }
+
+    .mic-button:hover, .mic-button.recording { color: #9f4fff; }
+    
+    .audio-wave-button {
+      background: #3a3a3a;
+      border-radius: 50%;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: flex;
+    }
+
+    .audio-wave-button:hover, .audio-wave-button.active { background: #9f4fff; }
+    .audio-wave-icon { width: 16px; height: 16px; stroke: white; }
+
+    /* AI Chat Interface */
+    #view-home {
+      height: 100vh;
+      padding-bottom: 20px;
+    }
+
+    .chat-container {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 0;
+      flex-direction: column;
+      flex: 1; /* Take up remaining height */
+      background: transparent;
+      border: none; /* Tinanggal ang box border */
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      display: none; /* Tinanggal ang header para hindi magmukhang popup */
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 10px 0;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-msg {
+      max-width: 85%;
+      padding: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+      word-wrap: break-word;
+    }
+
+    .chat-msg.user {
+      background: #2a2a2a;
+      color: white;
+      align-self: flex-end;
+      border-radius: 20px;
+      padding: 12px 20px;
+    }
+
+    .chat-msg.ai {
+      background: transparent;
+      color: #e3e3e3;
+      align-self: flex-start;
+      border: none;
+    }
+    
+    .chat-msg.system {
+      display: none; /* Tinatago na natin ang initial system text */
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 12px;
+      padding: 20px 0 0 0;
+      background: transparent;
+      border-top: none;
+      align-items: center;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 16px 24px;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      color: white;
+      border-radius: 30px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.3s, background 0.3s;
+    }
+
+    .chat-input-area input:focus { 
+      border-color: #555;
+      background: #333; 
+    }
+
+    .chat-input-area button {
+      background: #fff;
+      color: #000;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s;
+    }
+
+    .chat-input-area button:hover { opacity: 0.8; }
+    .chat-input-area button:disabled { background: #555; color: #888; cursor: not-allowed; }
+
+    /* Reusable Page Headers */
+    .page-header {
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+    .page-header h1 { color: #9f4fff; font-size: 2.5rem; margin-bottom: 15px; }
+    .page-header p { font-size: 1.1rem; color: #ccc; line-height: 1.6; }
+
+    /* Grids & Cards */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .card {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s;
+      border: 1px solid transparent;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      border-color: #442266;
+    }
+
+    .card h3 { color: #9f4fff; margin-bottom: 10px; font-size: 1.2rem; }
+    .card p { color: #cccccc; font-size: 0.95rem; line-height: 1.5; }
+    .card .meta { font-size: 0.8rem; color: #888; margin-top: 10px; }
+
+    /* Media/Gallery Specific */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .gallery-item {
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover { transform: scale(1.03); }
+
+    .gallery-item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item .caption { padding: 12px; color: #ccc; font-size: 0.9rem; font-weight: 500; }
+
+    /* Videos */
+    .upload-section {
+      background: rgba(42, 42, 42, 0.5);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 2px dashed #9f4fff;
+      text-align: center;
+      width: 100%;
+    }
+    .upload-section h2 { color: #fff; margin-bottom: 15px; }
+    .upload-section input { margin-bottom: 15px; color: #aaa; }
+    .btn-primary {
+      background: #9f4fff; color: white; border: none; padding: 10px 24px;
+      border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold;
+    }
+    .btn-primary:hover { background: #8a2be2; }
+
+    .video-item {
+      background: #2a2a2a; border-radius: 12px; overflow: hidden;
+    }
+    .video-item video { width: 100%; height: 200px; background: #000; object-fit: cover; }
+    .video-item .info { padding: 15px; }
+
+    /* History List */
+    .history-list { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+    .history-item {
+      background: #2a2a2a; border-radius: 12px; padding: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .history-item-left {
+      display: flex; align-items: center; gap: 20px; flex: 1;
+    }
+    .history-item .icon {
+      width: 48px; height: 48px; background: rgba(159, 79, 255, 0.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .history-item .icon svg { width: 24px; height: 24px; fill: #9f4fff; }
+
+    .btn-delete-history {
+      background: transparent;
+      border: none;
+      color: #ff4444;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 6px;
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-delete-history:hover {
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    /* Community Setup */
+    .community-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%;
+    }
+    @media (max-width: 900px) { .community-layout { grid-template-columns: 1fr; } }
+    .forum-section h2 { color: #fff; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: #222; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px;
+      border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .modal-content h3 { color: white; margin-bottom: 20px; font-size: 1.4rem; }
+    .modal-content input {
+      width: 100%; padding: 12px; margin-bottom: 20px; background: #111;
+      border: 1px solid #444; color: white; border-radius: 6px; outline: none;
+    }
+    .modal-content input:focus { border-color: #9f4fff; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-secondary { background: #444; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    .btn-secondary:hover { background: #555; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9f4fff; }
+
+    /* Loading Spinner */
+    .typing-indicator {
+      display: flex; gap: 4px; padding: 12px 16px; background: #2a2a2a;
+      border-radius: 8px; width: fit-content; align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+    .typing-indicator span {
+      width: 6px; height: 6px; background: #888; border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="logo">Learniverse</div>
+      <nav id="main-nav">
+        <a data-target="home" class="active">
+          <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9-2 0v7a1 1 0 0 1-1 1h-4v-4h-4v4h-4a1 1 0 0 1-1-1v-7z"/></svg>
+          Home
+        </a>
+        <a data-target="features">
+          <svg viewBox="0 -960 960 960"><path d="M340-540H200q-33 0-56.5-23.5T120-620v-140q0-33 23.5-56.5T200-840h140q33 0 56.5 23.5T420-760v140q0 33-23.5 56.5T340-540Zm-140-80h140v-140H200v140Zm140 500H200q-33 0-56.5-23.5T120-200v-140q0-33 23.5-56.5T200-420h140q33 0 56.5 23.5T420-340v140q0 33-23.5 56.5T340-120Zm-140-80h140v-140H200v140Zm560-340H620q-33 0-56.5-23.5T540-620v-140q0-33 23.5-56.5T620-840h140q33 0 56.5 23.5T840-760v140q0 33-23.5 56.5T760-540Zm-140-80h140v-140H620v140Zm140 500H620q-33 0-56.5-23.5T540-200v-140q0-33 23.5-56.5T620-420h140q33 0 56.5 23.5T840-340v140q0 33-23.5 56.5T760-120Zm-140-80h140v-140H620v140ZM340-620Zm0 280Zm280-280Zm0 280Z"/></svg>
+          Features
+        </a>
+        <a data-target="pictures">
+          <svg viewBox="0 -960 960 960"><path d="M360-400h400L622-580l-92 120-62-80-108 140Zm-40 160q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z"/></svg>
+          Pictures
+        </a>
+        <a data-target="videos">
+          <svg viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h480q33 0 56.5 23.5T720-720v180l160-160v440L720-420v180q0 33-23.5 56.5T640-160H160Zm0-80h480v-480H160v480Zm0 0v-480 480Z"/></svg>
+          Videos
+        </a>
+        <a data-target="community">
+          <svg viewBox="0 -960 960 960"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-7-.5-14.5T799-507q-5 29-27 48t-52 19h-80q-33 0-56.5-23.5T560-520v-40H400v-80q0-33 23.5-56.5T480-720h40q0-23 12.5-40.5T563-789q-20-5-40.5-8t-42.5-3q-134 0-227 93t-93 227h200q66 0 113 47t47 113v40H400v110q20 5 39.5 7.5T480-160Z"/></svg>
+          Community
+        </a>
+        <a data-target="history">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          History
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- User Top Panel (Removed content based on request) -->
+  <div class="user-panel">
+  </div>
+
+  <!-- Main Content Container (SPA wrapper) -->
+  <main class="main-content">
+    
+    <!-- HOME VIEW -->
+    <div id="view-home" class="page-view active">
+      
+      <div id="home-initial-view" style="display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 10vh;">
+        <img src="logo-removebg-preview.png" alt="Learniverse Logo" style="max-width: 350px; width: 100%; height: auto; margin-bottom: 30px;" />
+
+        <div class="search-container">
+          <span id="btn-global-upload" style="color: #9f4fff; font-weight: bold; font-size: 25px; cursor: pointer; padding: 0 5px; user-select: none;" title="Mag-upload ng Larawan o Video">+</span>
+          <input type="file" id="global-media-upload" accept="image/*,video/*" style="display: none;" multiple>
+          <input type="text" id="main-search-input" placeholder="Search for courses, tutorials or ask AI..." />
+          <button class="mic-button" id="btn-mic" title="Voice Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="2" width="6" height="11" rx="3"></rect>
+              <path d="M5 10v2a7 7 0 0 0 14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="22"></line>
+              <line x1="8" y1="22" x2="16" y2="22"></line>
+            </svg>
+          </button>
+          <button class="audio-wave-button" id="btn-audio" title="Audio waves">
+            <svg class="audio-wave-icon" viewBox="0 0 16 16" fill="none">
+              <path d="M1 8h1M4 4v8M7 3v10M10 5v6M13 2v12M16 8h-1" stroke-width="1.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Project Chat Window -->
+      <div class="chat-container" id="chat-container">
+        <div class="chat-messages" id="chat-messages">
+          <!-- Chat messages appear here -->
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="chat-input" placeholder="Message Learniverse A.I" />
+          <button id="btn-send-chat" title="Send message">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES VIEW -->
+    <div id="view-features" class="page-view">
+      <div class="page-header">
+        <h1>Features</h1>
+        <p>Discover the amazing features of Learniverse that make learning engaging and effective.</p>
+      </div>
+      <div class="content-grid">
+        <div class="card">
+          <h3>Interactive Courses</h3>
+          <p>Engage with hands-on projects and real-world applications in our interactive learning modules.</p>
+        </div>
+        <div class="card">
+          <h3>AI-Powered Assistance</h3>
+          <p>Get personalized help and guidance from our advanced AI learning assistant integrated throughout the platform.</p>
+        </div>
+        <div class="card">
+          <h3>Progress Tracking</h3>
+          <p>Monitor your learning journey with detailed analytics and progress reports.</p>
+        </div>
+        <div class="card">
+          <h3>Community Support</h3>
+          <p>Connect with fellow learners and experts in our vibrant learning community.</p>
+        </div>
+        <div class="card">
+          <h3>Multimedia Content</h3>
+          <p>Access a rich library of videos, images, and interactive media to enhance your learning.</p>
+        </div>
+        <div class="card">
+          <h3>Certification</h3>
+          <p>Earn recognized certificates upon completion of courses and skill assessments.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PICTURES VIEW -->
+    <div id="view-pictures" class="page-view">
+      <div class="page-header">
+        <h1>Pictures</h1>
+        <p>Explore visual learning resources and educational images to enhance your understanding.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" alt="Science Diagram" loading="lazy">
+          <div class="caption">Interactive Science Diagram</div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" alt="Math Formula" loading="lazy">
+          <div class="caption">Advanced Math Concepts</div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1461360228754-6e81c478b882?auto=format&fit=crop&w=600&q=80" alt="History Timeline" loading="lazy">
+          <div class="caption">Historical Timeline</div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=600&q=80" alt="Art Gallery" loading="lazy">
+          <div class="caption">Digital Art Collection</div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=600&q=80" alt="Geography Map" loading="lazy">
+          <div class="caption">World Geography Map</div>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80" alt="Programming Code" loading="lazy">
+          <div class="caption">Code Snippet Examples</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEOS VIEW -->
+    <div id="view-videos" class="page-view">
+      <div class="page-header">
+        <h1>Videos</h1>
+        <p>Watch engaging video tutorials and lectures to deepen your knowledge across various subjects.</p>
+      </div>
+      
+      <div class="upload-section">
+        <h2>Upload Your Own Videos</h2>
+        <input type="file" id="video-upload" accept=".mp4" multiple>
+        <br>
+        <button class="btn-primary" id="btn-upload-video">Add Videos to Library</button>
+      </div>
+
+      <div class="content-grid" id="video-grid">
+        <div class="video-item card">
+          <video controls poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Browser does not support video.
+          </video>
+          <div class="info">
+            <h3>Introduction to Programming</h3>
+            <p>Learn the basics of programming with hands-on examples and real-world applications.</p>
+          </div>
+        </div>
+        <div class="video-item card">
+          <video controls poster="https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=600&q=80">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          </video>
+          <div class="info">
+            <h3>Physics Experiments</h3>
+            <p>Explore fundamental physics concepts through interactive experiments and demonstrations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY VIEW -->
+    <div id="view-community" class="page-view">
+      <div class="page-header">
+        <h1>Community</h1>
+        <p>Connect with fellow learners, share knowledge, and collaborate on exciting projects.</p>
+      </div>
+      
+      <div class="community-layout">
+        <div class="forum-section">
+          <h2>Recent Forum Posts</h2>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Help with Python Data Structures</h3>
+            <p>I'm struggling with implementing a binary search tree. Can anyone provide some guidance?</p>
+            <div class="meta">Posted by User123 • 2 hours ago</div>
+          </div>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Best Resources for Machine Learning</h3>
+            <p>What are your favorite online resources for learning machine learning from scratch?</p>
+            <div class="meta">Posted by ML_Student • 5 hours ago</div>
+          </div>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Web Development Project Ideas</h3>
+            <p>Looking for creative project ideas to practice my web development skills. Any suggestions?</p>
+            <div class="meta">Posted by CodeNinja • 1 day ago</div>
+          </div>
+        </div>
+
+        <div class="forum-section">
+          <h2>Active Discussions</h2>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Future of AI in Education</h3>
+            <p>How do you think artificial intelligence will change the way we learn in the coming years?</p>
+            <div class="meta">Started by TechGuru • 12 replies</div>
+          </div>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Study Group Formation</h3>
+            <p>Anyone interested in forming a study group for the upcoming algorithms course?</p>
+            <div class="meta">Started by StudyBuddy • 8 replies</div>
+          </div>
+          <div class="card" style="margin-bottom:15px;">
+            <h3>Career Advice for Developers</h3>
+            <p>What skills should I focus on to become a successful full-stack developer?</p>
+            <div class="meta">Started by DevNewbie • 15 replies</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY VIEW -->
+    <div id="view-history" class="page-view">
+      <div class="page-header">
+        <h1>History</h1>
+        <p>Review your learning journey and revisit completed courses, projects, and achievements.</p>
+      </div>
+
+      <div class="history-list">
+        <div class="history-item">
+          <div class="history-item-left">
+            <div class="icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            </div>
+            <div class="content">
+              <h3 style="color:#9f4fff; margin-bottom:5px;">Completed: Introduction to Python</h3>
+              <p style="color:#ccc; font-size:0.9rem;">Successfully completed the beginner Python programming course with a final project on data analysis.</p>
+              <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Completed 3 days ago</div>
+            </div>
+          </div>
+          <button class="btn-delete-history" onclick="this.parentElement.remove()" title="Tanggalin sa history">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+
+        <div class="history-item">
+          <div class="history-item-left">
+            <div class="icon">
+               <svg viewBox="0 -960 960 960"><path d="M360-400h400L622-580l-92 120-62-80-108 140Zm-40 160q-33 0-56.5-23.5T240-320v-480q0-33 23.5-56.5T320-880h480q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H320Zm0-80h480v-480H320v480ZM160-80q-33 0-56.5-23.5T80-160v-560h80v560h560v80H160Zm160-720v480-480Z"/></svg>
+            </div>
+            <div class="content">
+              <h3 style="color:#9f4fff; margin-bottom:5px;">Viewed: Advanced Data Structures Gallery</h3>
+              <p style="color:#ccc; font-size:0.9rem;">Explored visual representations of complex data structures including trees, graphs, and hash tables.</p>
+              <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Viewed 1 week ago</div>
+            </div>
+          </div>
+          <button class="btn-delete-history" onclick="this.parentElement.remove()" title="Tanggalin sa history">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+
+        <div class="history-item">
+          <div class="history-item-left">
+            <div class="icon">
+               <svg viewBox="0 -960 960 960"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h480q33 0 56.5 23.5T720-720v180l160-160v440L720-420v180q0 33-23.5 56.5T640-160H160Zm0-80h480v-480H160v480Zm0 0v-480 480Z"/></svg>
+            </div>
+            <div class="content">
+              <h3 style="color:#9f4fff; margin-bottom:5px;">Watched: Machine Learning Fundamentals</h3>
+              <p style="color:#ccc; font-size:0.9rem;">Completed the video series on machine learning basics, covering supervised and unsupervised learning.</p>
+              <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Watched 2 weeks ago</div>
+            </div>
+          </div>
+          <button class="btn-delete-history" onclick="this.parentElement.remove()" title="Tanggalin sa history">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /* =====================================
+       1. NAVIGATION ROUTER
+       ===================================== */
+    const navLinks = document.querySelectorAll('#main-nav a');
+    const pageViews = document.querySelectorAll('.page-view');
+
+    function navigateTo(targetId) {
+      // Update UI Views
+      pageViews.forEach(view => {
+        if (view.id === 'view-' + targetId) {
+          view.classList.add('active');
+        } else {
+          view.classList.remove('active');
+        }
+      });
+      // Update Nav highlighting
+      navLinks.forEach(link => {
+        if (link.dataset.target === targetId) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Special logic: Reset Home view
+      if (targetId === 'home') {
+        const homeInit = document.getElementById('home-initial-view');
+        const chatCont = document.getElementById('chat-container');
+        if (homeInit) homeInit.style.display = 'flex';
+        if (chatCont) chatCont.style.display = 'none';
+      }
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigateTo(link.dataset.target);
+      });
+    });
+
+    /* =====================================
+       2. UI ELEMENTS & AI CHAT LOGIC
+       ===================================== */
+    // Chat UI elements
+    const chatContainer = document.getElementById('chat-container');
+    const homeInitialView = document.getElementById('home-initial-view');
+
+    /* =====================================
+       3. GEMINI API INTEGRATION (Chat)
+       ===================================== */
+    const apiKey = ""; // Execution environment injects this key
+    const chatInput = document.getElementById('chat-input');
+    const btnSendChat = document.getElementById('btn-send-chat');
+    const chatMessages = document.getElementById('chat-messages');
+    const mainSearchInput = document.getElementById('main-search-input');
+
+    // Create message element
+    function appendMessage(text, role) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `chat-msg ${role}`;
+      // Basic markdown/newline to BR formatting
+      msgDiv.innerHTML = text.replace(/\n/g, '<br/>');
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return msgDiv;
+    }
+
+    // Show typing indicator
+    function showTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.className = 'typing-indicator';
+      indicator.id = 'typing-indicator';
+      indicator.innerHTML = '<span></span><span></span><span></span>';
+      chatMessages.appendChild(indicator);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Remove typing indicator
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    // Function to add new search history item
+    function addSearchToHistory(query) {
+      const historyList = document.querySelector('.history-list');
+      
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'history-item';
+      
+      const leftDiv = document.createElement('div');
+      leftDiv.className = 'history-item-left';
+      
+      const iconDiv = document.createElement('div');
+      iconDiv.className = 'icon';
+      iconDiv.innerHTML = `<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'content';
+      contentDiv.innerHTML = `
+        <h3 style="color:#9f4fff; margin-bottom:5px;">AI Chat: ${query}</h3>
+        <p style="color:#ccc; font-size:0.9rem;">Nag-umpisa ng bagong pag-uusap</p>
+        <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Ngayon lang</div>
+      `;
+      
+      leftDiv.appendChild(iconDiv);
+      leftDiv.appendChild(contentDiv);
+      
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-delete-history';
+      delBtn.title = 'Tanggalin sa history';
+      delBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+      delBtn.onclick = () => itemDiv.remove();
+      
+      itemDiv.appendChild(leftDiv);
+      itemDiv.appendChild(delBtn);
+      
+      // Prepend so new items show at the top
+      historyList.prepend(itemDiv);
+    }
+
+    // Fetch response from Gemini with backoff
+    async function fetchGeminiAI(prompt, retries = 5) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: "Isa kang matulungin at maalam na AI tutor para sa Learniverse. Sumagot sa wikang Filipino." }] }
+      };
+
+      const delays = [1000, 2000, 4000, 8000, 16000];
+      
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Pasensya na, wala akong natanggap na sagot.";
+        } catch (error) {
+          if (i === retries - 1) {
+            console.error(error);
+            return "Nabigo ang koneksyon sa AI assistant. Pakisubukan muli mamaya.";
+          }
+          await new Promise(resolve => setTimeout(resolve, delays[i]));
+        }
+      }
+    }
+
+    // Shared function to handle sending messages
+    async function handleSendMessage(message) {
+      if (!message) return;
+
+      // Make sure we switch to home view without triggering the reset logic immediately
+      pageViews.forEach(view => view.classList.remove('active'));
+      document.getElementById('view-home').classList.add('active');
+      navLinks.forEach(link => {
+        if (link.dataset.target === 'home') link.classList.add('active');
+        else link.classList.remove('active');
+      });
+      
+      // Hide the initial big logo and search bar, show chat container
+      homeInitialView.style.display = 'none';
+      chatContainer.style.display = 'flex';
+      chatContainer.scrollIntoView({ behavior: 'smooth' });
+
+      // Add user message
+      appendMessage(message, 'user');
+      showTypingIndicator();
+
+      // Fetch AI response
+      const aiResponse = await fetchGeminiAI(message);
+
+      // Display AI response
+      removeTypingIndicator();
+      appendMessage(aiResponse, 'ai');
+    }
+
+    // Handle send click from Chat Input
+    btnSendChat.addEventListener('click', async () => {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      chatInput.value = '';
+      chatInput.disabled = true;
+      btnSendChat.disabled = true;
+
+      await handleSendMessage(message);
+
+      chatInput.disabled = false;
+      btnSendChat.disabled = false;
+      chatInput.focus();
+    });
+
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') btnSendChat.click();
+    });
+
+    // Handle send from Main Search Bar
+    mainSearchInput.addEventListener('keypress', async (e) => {
+      if (e.key === 'Enter') {
+        const message = mainSearchInput.value.trim();
+        if (!message) return;
+        
+        mainSearchInput.value = '';
+        mainSearchInput.disabled = true;
+        
+        // Magdagdag sa history bilang bagong pag-uusap
+        addSearchToHistory(message);
+        
+        // Burahin ang lumang chat para malinis
+        chatMessages.innerHTML = '';
+
+        await handleSendMessage(message);
+        
+        mainSearchInput.disabled = false;
+      }
+    });
+
+    /* =====================================
+       4. AUDIO & VOICE LOGIC (Mock/API)
+       ===================================== */
+    const btnMic = document.getElementById('btn-mic');
+    const btnAudio = document.getElementById('btn-audio');
+
+    // Voice Search
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      btnMic.addEventListener('click', () => {
+        btnMic.classList.add('recording');
+        recognition.start();
+      });
+
+      recognition.onresult = event => {
+        mainSearchInput.value = event.results[0][0].transcript;
+      };
+
+      recognition.onend = () => btnMic.classList.remove('recording');
+      recognition.onerror = () => btnMic.classList.remove('recording');
+    } else {
+      btnMic.addEventListener('click', () => alert('Voice recognition not supported.'));
+    }
+
+    // Audio Wave visual toggle
+    btnAudio.addEventListener('click', () => {
+      btnAudio.classList.toggle('active');
+    });
+
+    /* =====================================
+       5. VIDEO UPLOAD MOCK (Object URL)
+       ===================================== */
+    const videoUpload = document.getElementById('video-upload');
+    const btnUploadVideo = document.getElementById('btn-upload-video');
+    const videoGrid = document.getElementById('video-grid');
+
+    btnUploadVideo.addEventListener('click', () => {
+      const files = videoUpload.files;
+      if (files.length === 0) {
+        alert('Mangyaring pumili ng MP4 file.');
+        return;
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type !== 'video/mp4') {
+          alert(`Ang "${file.name}" ay hindi isang MP4 video.`);
+          continue;
+        }
+
+        const videoURL = URL.createObjectURL(file);
+        
+        // Create HTML string
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'video-item card';
+        itemDiv.innerHTML = `
+          <video controls>
+            <source src="${videoURL}" type="video/mp4">
+          </video>
+          <div class="info">
+            <h3>${file.name.replace('.mp4', '')}</h3>
+            <p>User uploaded video</p>
+          </div>
+        `;
+        videoGrid.prepend(itemDiv);
+      }
+      videoUpload.value = '';
+    });
+
+    /* =====================================
+       6. GLOBAL MEDIA UPLOAD (Plus Sign)
+       ===================================== */
+    const btnGlobalUpload = document.getElementById('btn-global-upload');
+    const globalMediaUpload = document.getElementById('global-media-upload');
+
+    btnGlobalUpload.addEventListener('click', () => {
+      globalMediaUpload.click();
+    });
+
+    globalMediaUpload.addEventListener('change', (e) => {
+      const files = e.target.files;
+      if (!files.length) return;
+
+      let imageCount = 0;
+      let videoCount = 0;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileURL = URL.createObjectURL(file);
+
+        if (file.type.startsWith('image/')) {
+          // Add to Pictures Gallery
+          const galleryGrid = document.querySelector('.gallery-grid');
+          if (galleryGrid) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'gallery-item';
+            itemDiv.innerHTML = `
+              <img src="${fileURL}" alt="${file.name}">
+              <div class="caption">${file.name}</div>
+            `;
+            galleryGrid.prepend(itemDiv);
+            imageCount++;
+          }
+        } else if (file.type.startsWith('video/')) {
+          // Add to Videos Grid
+          if (videoGrid) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'video-item card';
+            itemDiv.innerHTML = `
+              <video controls>
+                <source src="${fileURL}" type="${file.type}">
+              </video>
+              <div class="info">
+                <h3>${file.name.replace(/\.[^/.]+$/, "")}</h3>
+                <p>In-upload mula sa Home</p>
+              </div>
+            `;
+            videoGrid.prepend(itemDiv);
+            videoCount++;
+          }
+        }
+      }
+
+      // Notify the user
+      if (imageCount > 0 && videoCount > 0) {
+        alert(`Matagumpay na nai-upload ang ${imageCount} larawan at ${videoCount} video! Maaari mo itong tingnan sa Pictures at Videos tab.`);
+      } else if (imageCount > 0) {
+        alert(`Matagumpay na nai-upload ang ${imageCount} larawan! Maaari mo itong tingnan sa Pictures tab.`);
+      } else if (videoCount > 0) {
+        alert(`Matagumpay na nai-upload ang ${videoCount} video! Maaari mo itong tingnan sa Videos tab.`);
+      }
+
+      // Reset file input
+      globalMediaUpload.value = '';
+    });
+
+  </script>
+</body>
+</html>
