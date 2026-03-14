@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Learniverse AI</title>
+  <title>Learniverse Community</title>
   <link rel="icon" href="logo.jpg" type="image/jpeg">
   <style>
     /* Reset and base */
@@ -201,23 +201,6 @@
     }
 
     /* Home Specific Styles */
-    .main-logo-text {
-      font-size: 48px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      margin-top: 40px;
-      color: #fff;
-      text-shadow: 0 0 20px rgba(159, 79, 255, 0.4);
-    }
-
-    .logo-text {
-      color: #9f4fff;
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 1.3px;
-      margin-bottom: 30px;
-    }
-
     .search-container {
       width: 100%;
       max-width: 500px;
@@ -271,106 +254,131 @@
     .audio-wave-button:hover, .audio-wave-button.active { background: #9f4fff; }
     .audio-wave-icon { width: 16px; height: 16px; stroke: white; }
 
-    /* AI Chat Interface */
+    /* Pinterest / Facebook Style Community Feed */
     #view-home {
       padding-bottom: 20px;
     }
 
-    .chat-container {
+    .feed-container {
       display: none;
       width: 100%;
-      max-width: 800px;
-      margin-top: 0;
+      margin-top: 20px;
       flex-direction: column;
       flex: 1;
-      background: transparent;
-      border: none;
-      overflow: hidden;
+      animation: fadeIn 0.4s ease;
     }
     
-    .chat-header {
-      display: none; 
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 10px 0;
-      overflow-y: auto;
+    .feed-header {
       display: flex;
-      flex-direction: column;
-      gap: 30px;
-      scroll-behavior: smooth;
-    }
-
-    .chat-msg {
-      max-width: 85%;
-      padding: 0;
-      line-height: 1.6;
-      font-size: 1rem;
-      word-wrap: break-word;
-    }
-
-    .chat-msg.user {
-      background: #2a2a2a;
-      color: white;
-      align-self: flex-end;
-      border-radius: 20px;
-      padding: 12px 20px;
-    }
-
-    .chat-msg.ai {
-      background: transparent;
-      color: #e3e3e3;
-      align-self: flex-start;
-      border: none;
-    }
-    
-    .chat-msg.system {
-      display: none; 
-    }
-
-    .chat-input-area {
-      display: flex;
-      gap: 12px;
-      padding: 20px 0 0 0;
-      background: transparent;
-      border-top: none;
+      justify-content: space-between;
       align-items: center;
+      margin-bottom: 25px;
+      padding: 0 10px;
     }
 
-    .chat-input-area input {
-      flex: 1;
-      padding: 16px 24px;
+    .feed-header h2 {
+      color: #9f4fff;
+      font-size: 1.5rem;
+    }
+
+    .feed-grid {
+      column-count: 3;
+      column-gap: 20px;
+      width: 100%;
+    }
+
+    .feed-card {
       background: #2a2a2a;
-      border: 1px solid #3a3a3a;
-      color: white;
-      border-radius: 30px;
-      font-size: 1rem;
-      outline: none;
-      transition: border 0.3s, background 0.3s;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 20px;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: column;
     }
 
-    .chat-input-area input:focus { 
-      border-color: #555;
-      background: #333; 
+    .feed-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(159, 79, 255, 0.2);
     }
 
-    .chat-input-area button {
-      background: #fff;
-      color: #000;
-      border: none;
-      width: 48px;
-      height: 48px;
+    .feed-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-bottom: 1px solid #3a3a3a;
+    }
+
+    .feed-card .content {
+      padding: 16px;
+    }
+
+    .feed-card .author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .feed-card .author .avatar {
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      cursor: pointer;
+      background: linear-gradient(135deg, #9f4fff, #8a2be2);
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: opacity 0.3s;
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
     }
 
-    .chat-input-area button:hover { opacity: 0.8; }
-    .chat-input-area button:disabled { background: #555; color: #888; cursor: not-allowed; }
+    .feed-card .author .name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e3e3e3;
+    }
+
+    .feed-card .text {
+      font-size: 0.95rem;
+      color: #cccccc;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .feed-card .actions {
+      display: flex;
+      justify-content: space-between;
+      color: #888;
+      font-size: 0.85rem;
+      border-top: 1px solid #3a3a3a;
+      padding-top: 12px;
+    }
+
+    .feed-card .actions-left {
+      display: flex;
+      gap: 15px;
+    }
+
+    .feed-card .action-btn {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+
+    .feed-card .action-btn:hover {
+      color: #9f4fff;
+    }
+
+    .feed-card .action-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
 
     /* Reusable Page Headers */
     .page-header {
@@ -501,23 +509,13 @@
     ::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
     ::-webkit-scrollbar-thumb:hover { background: #9f4fff; }
 
-    /* Loading Spinner */
-    .typing-indicator {
-      display: flex; gap: 4px; padding: 12px 16px; background: #2a2a2a;
-      border-radius: 8px; width: fit-content; align-self: flex-start;
-      border-bottom-left-radius: 2px;
-    }
-    .typing-indicator span {
-      width: 6px; height: 6px; background: #888; border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
-    }
-    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-
     /* ====================================================
        📱 RESPONSIVE DESIGN (For Mobile Phones & Tablets) 
        ==================================================== */
+    @media (max-width: 1024px) {
+      .feed-grid { column-count: 2; }
+    }
+
     @media (max-width: 768px) {
       /* Hide sidebar off-screen by default */
       .sidebar {
@@ -571,25 +569,13 @@
         margin-bottom: 15px !important;
       }
 
-      /* Chat Adjustments */
-      .chat-msg {
-        max-width: 100%;
-        padding: 10px 15px;
+      /* Feed Adjustments */
+      .feed-grid {
+        column-count: 1;
       }
 
-      .chat-input-area {
-        padding: 15px 0 0 0;
-        gap: 8px;
-      }
-
-      .chat-input-area input {
-        padding: 12px 18px;
-        font-size: 14px;
-      }
-
-      .chat-input-area button {
-        width: 42px;
-        height: 42px;
+      .feed-header h2 {
+        font-size: 1.2rem;
       }
 
       /* History Adjustments */
@@ -652,6 +638,10 @@
     </div>
   </aside>
 
+  <!-- User Top Panel -->
+  <div class="user-panel">
+  </div>
+
   <!-- Main Content Container (SPA wrapper) -->
   <main class="main-content">
     
@@ -677,7 +667,7 @@
         <div class="search-container">
           <span id="btn-global-upload" style="color: #9f4fff; font-weight: bold; font-size: 25px; cursor: pointer; padding: 0 5px; user-select: none;" title="Mag-upload ng Larawan o Video">+</span>
           <input type="file" id="global-media-upload" accept="image/*,video/*" style="display: none;" multiple>
-          <input type="text" id="main-search-input" placeholder="Search for courses, tutorials or ask AI..." />
+          <input type="text" id="main-search-input" placeholder="Search community posts, topics, or stock images..." />
           <button class="mic-button" id="btn-mic" title="Voice Search">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="9" y="2" width="6" height="11" rx="3"></rect>
@@ -694,19 +684,16 @@
         </div>
       </div>
 
-      <!-- AI Project Chat Window -->
-      <div class="chat-container" id="chat-container">
-        <div class="chat-messages" id="chat-messages">
-          <!-- Chat messages appear here -->
-        </div>
-        <div class="chat-input-area">
-          <input type="text" id="chat-input" placeholder="Message Learniverse A.I" />
-          <button id="btn-send-chat" title="Send message">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
+      <!-- Pinterest / FB Style Feed (Replaces AI Chat) -->
+      <div class="feed-container" id="feed-container">
+        <div class="feed-header">
+          <h2 id="feed-title">Community Highlights</h2>
+          <button style="background: transparent; border: 1px solid #444; color: #ccc; padding: 6px 12px; border-radius: 20px; cursor: pointer;" onclick="document.getElementById('home-initial-view').style.display='flex'; document.getElementById('feed-container').style.display='none'; document.getElementById('main-search-input').value='';">
+            &times; Close Feed
           </button>
+        </div>
+        <div class="feed-grid" id="feed-grid">
+          <!-- Feed cards will be dynamically injected here via JavaScript -->
         </div>
       </div>
     </div>
@@ -966,9 +953,12 @@
       // Special logic: Reset Home view
       if (targetId === 'home') {
         const homeInit = document.getElementById('home-initial-view');
-        const chatCont = document.getElementById('chat-container');
+        const feedCont = document.getElementById('feed-container');
         if (homeInit) homeInit.style.display = 'flex';
-        if (chatCont) chatCont.style.display = 'none';
+        if (feedCont) feedCont.style.display = 'none';
+        
+        // Render feed in background to reset
+        renderFeed();
       }
 
       // Close sidebar automatically on mobile after clicking a link
@@ -986,47 +976,79 @@
     });
 
     /* =====================================
-       2. UI ELEMENTS & AI CHAT LOGIC
+       2. MOCK COMMUNITY DATA & FEED LOGIC
        ===================================== */
-    // Chat UI elements
-    const chatContainer = document.getElementById('chat-container');
-    const homeInitialView = document.getElementById('home-initial-view');
+    // Replaces AI Chat with a visual masonry feed of stock photos / community posts
+    const communityPosts = [
+      { type: 'image', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=500&q=80', author: 'Elena G.', text: 'Just finished setting up my new study space! 🚀 What do you guys think? #productivity', likes: 245, comments: 12 },
+      { type: 'text', author: 'Mark T.', text: 'Can anyone recommend a good tutorial for advanced React patterns? Struggling with custom hooks.', likes: 12, comments: 8 },
+      { type: 'image', img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=80', author: 'Sarah W.', text: 'Late night coding session... ☕ Need coffee.', likes: 89, comments: 5 },
+      { type: 'image', img: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=500&q=80', author: 'David L.', text: 'Check out this awesome new mechanical keyboard I got for programming!', likes: 156, comments: 22 },
+      { type: 'text', author: 'Jessica M.', text: 'What is your favorite way to learn new algorithms? Books, video courses, or doing practice problems? Let me know!', likes: 45, comments: 34 },
+      { type: 'image', img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=500&q=80', author: 'Alex K.', text: 'Finally nailed the CSS grid layout for my project. Look at this beauty!', likes: 312, comments: 18 },
+      { type: 'image', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=500&q=80', author: 'Rachel B.', text: 'Taking a break from screen time to read up on some design theory. 📚', likes: 98, comments: 4 },
+      { type: 'text', author: 'Michael C.', text: 'Just published my first open-source package on npm! Huge thanks to this community for the constant support.', likes: 520, comments: 45 },
+      { type: 'image', img: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=80', author: 'Chloe R.', text: 'Collaborating with my team across 3 different time zones today 🌍 Remote work life!', likes: 187, comments: 9 }
+    ];
+
+    const feedGrid = document.getElementById('feed-grid');
+    const feedTitle = document.getElementById('feed-title');
+
+    function renderFeed(query = '') {
+      feedGrid.innerHTML = '';
+      
+      const filtered = communityPosts.filter(post => {
+        const q = query.toLowerCase();
+        return post.text.toLowerCase().includes(q) || post.author.toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        feedGrid.innerHTML = `<p style="color: #888; grid-column: 1 / -1; text-align: center; margin-top: 50px;">No community posts found for "${query}". Try another search!</p>`;
+        return;
+      }
+
+      filtered.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+        
+        let imgHTML = post.type === 'image' ? `<img src="${post.img}" alt="Post image" loading="lazy">` : '';
+        
+        card.innerHTML = `
+          ${imgHTML}
+          <div class="content">
+            <div class="author">
+              <div class="avatar">${post.author.charAt(0)}</div>
+              <div class="name">${post.author}</div>
+            </div>
+            <div class="text">${post.text}</div>
+            <div class="actions">
+              <div class="actions-left">
+                <span class="action-btn">
+                  <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                  ${post.likes}
+                </span>
+                <span class="action-btn">
+                  <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  ${post.comments}
+                </span>
+              </div>
+              <span class="action-btn" title="Save/Bookmark">
+                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              </span>
+            </div>
+          </div>
+        `;
+        feedGrid.appendChild(card);
+      });
+    }
+
 
     /* =====================================
-       3. GEMINI API INTEGRATION (Chat)
+       3. SEARCH & HISTORY LOGIC
        ===================================== */
-    const apiKey = ""; // Execution environment injects this key
-    const chatInput = document.getElementById('chat-input');
-    const btnSendChat = document.getElementById('btn-send-chat');
-    const chatMessages = document.getElementById('chat-messages');
     const mainSearchInput = document.getElementById('main-search-input');
-
-    // Create message element
-    function appendMessage(text, role) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `chat-msg ${role}`;
-      // Basic markdown/newline to BR formatting
-      msgDiv.innerHTML = text.replace(/\n/g, '<br/>');
-      chatMessages.appendChild(msgDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-      return msgDiv;
-    }
-
-    // Show typing indicator
-    function showTypingIndicator() {
-      const indicator = document.createElement('div');
-      indicator.className = 'typing-indicator';
-      indicator.id = 'typing-indicator';
-      indicator.innerHTML = '<span></span><span></span><span></span>';
-      chatMessages.appendChild(indicator);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    // Remove typing indicator
-    function removeTypingIndicator() {
-      const indicator = document.getElementById('typing-indicator');
-      if (indicator) indicator.remove();
-    }
+    const homeInitialView = document.getElementById('home-initial-view');
+    const feedContainer = document.getElementById('feed-container');
 
     // Function to add new search history item
     function addSearchToHistory(query) {
@@ -1040,13 +1062,13 @@
       
       const iconDiv = document.createElement('div');
       iconDiv.className = 'icon';
-      iconDiv.innerHTML = `<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`;
+      iconDiv.innerHTML = `<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>`;
       
       const contentDiv = document.createElement('div');
       contentDiv.className = 'content';
       contentDiv.innerHTML = `
-        <h3 style="color:#9f4fff; margin-bottom:5px;">AI Chat: ${query}</h3>
-        <p style="color:#ccc; font-size:0.9rem;">Nag-umpisa ng bagong pag-uusap</p>
+        <h3 style="color:#9f4fff; margin-bottom:5px;">Community Search: ${query}</h3>
+        <p style="color:#ccc; font-size:0.9rem;">Naghanap sa community posts at images.</p>
         <div class="meta" style="font-size: 0.8rem; color: #888; margin-top:5px;">Ngayon lang</div>
       `;
       
@@ -1066,42 +1088,11 @@
       historyList.prepend(itemDiv);
     }
 
-    // Fetch response from Gemini with backoff
-    async function fetchGeminiAI(prompt, retries = 5) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-      const payload = {
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        systemInstruction: { parts: [{ text: "Isa kang matulungin at maalam na AI tutor para sa Learniverse. Sumagot sa wikang Filipino." }] }
-      };
+    // Handle search query
+    function handleCommunitySearch(query) {
+      if (!query) return;
 
-      const delays = [1000, 2000, 4000, 8000, 16000];
-      
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const data = await response.json();
-          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Pasensya na, wala akong natanggap na sagot.";
-        } catch (error) {
-          if (i === retries - 1) {
-            console.error(error);
-            return "Nabigo ang koneksyon sa AI assistant. Pakisubukan muli mamaya.";
-          }
-          await new Promise(resolve => setTimeout(resolve, delays[i]));
-        }
-      }
-    }
-
-    // Shared function to handle sending messages
-    async function handleSendMessage(message) {
-      if (!message) return;
-
-      // Make sure we switch to home view without triggering the reset logic immediately
+      // Navigate home
       pageViews.forEach(view => view.classList.remove('active'));
       document.getElementById('view-home').classList.add('active');
       navLinks.forEach(link => {
@@ -1109,68 +1100,41 @@
         else link.classList.remove('active');
       });
       
-      // Hide the initial big logo and search bar, show chat container
+      // Show feed container and hide initial view
       homeInitialView.style.display = 'none';
-      chatContainer.style.display = 'flex';
+      feedContainer.style.display = 'flex';
       
-      // Allow slight delay for display block rendering
-      setTimeout(() => chatContainer.scrollIntoView({ behavior: 'smooth' }), 50);
-
-      // Add user message
-      appendMessage(message, 'user');
-      showTypingIndicator();
-
-      // Fetch AI response
-      const aiResponse = await fetchGeminiAI(message);
-
-      // Display AI response
-      removeTypingIndicator();
-      appendMessage(aiResponse, 'ai');
+      if (query.trim() === '*') {
+        feedTitle.textContent = "Explore Community Highlights";
+        renderFeed('');
+      } else {
+        feedTitle.textContent = `Search Results for "${query}"`;
+        renderFeed(query);
+      }
+      
+      // Scroll to feed
+      setTimeout(() => feedContainer.scrollIntoView({ behavior: 'smooth' }), 50);
     }
 
-    // Handle send click from Chat Input
-    btnSendChat.addEventListener('click', async () => {
-      const message = chatInput.value.trim();
-      if (!message) return;
-
-      chatInput.value = '';
-      chatInput.disabled = true;
-      btnSendChat.disabled = true;
-
-      await handleSendMessage(message);
-
-      chatInput.disabled = false;
-      btnSendChat.disabled = false;
-      chatInput.focus();
-    });
-
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') btnSendChat.click();
-    });
-
-    // Handle send from Main Search Bar
-    mainSearchInput.addEventListener('keypress', async (e) => {
+    mainSearchInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
-        const message = mainSearchInput.value.trim();
-        if (!message) return;
+        const query = mainSearchInput.value.trim();
+        if (!query) return;
         
-        mainSearchInput.value = '';
         mainSearchInput.disabled = true;
         
-        // Magdagdag sa history bilang bagong pag-uusap
-        addSearchToHistory(message);
+        // Log to history
+        addSearchToHistory(query);
         
-        // Burahin ang lumang chat para malinis
-        chatMessages.innerHTML = '';
-
-        await handleSendMessage(message);
+        // Render search feed
+        handleCommunitySearch(query);
         
         mainSearchInput.disabled = false;
       }
     });
 
     /* =====================================
-       4. AUDIO & VOICE LOGIC (Mock/API)
+       4. AUDIO & VOICE LOGIC (Mock)
        ===================================== */
     const btnMic = document.getElementById('btn-mic');
     const btnAudio = document.getElementById('btn-audio');
@@ -1191,6 +1155,9 @@
 
       recognition.onresult = event => {
         mainSearchInput.value = event.results[0][0].transcript;
+        // Optionally auto-search upon recording result
+        handleCommunitySearch(mainSearchInput.value);
+        addSearchToHistory(mainSearchInput.value);
       };
 
       recognition.onend = () => btnMic.classList.remove('recording');
@@ -1278,6 +1245,17 @@
             galleryGrid.prepend(itemDiv);
             imageCount++;
           }
+          
+          // BONUS: Also inject the user-uploaded image to the feed grid so they see it instantly!
+          communityPosts.unshift({
+             type: 'image',
+             img: fileURL,
+             author: 'You',
+             text: `Uploaded via home bar: ${file.name}`,
+             likes: 0,
+             comments: 0
+          });
+
         } else if (file.type.startsWith('video/')) {
           // Add to Videos Grid
           if (videoGrid) {
@@ -1302,7 +1280,9 @@
       if (imageCount > 0 && videoCount > 0) {
         alert(`Matagumpay na nai-upload ang ${imageCount} larawan at ${videoCount} video! Maaari mo itong tingnan sa Pictures at Videos tab.`);
       } else if (imageCount > 0) {
-        alert(`Matagumpay na nai-upload ang ${imageCount} larawan! Maaari mo itong tingnan sa Pictures tab.`);
+        alert(`Matagumpay na nai-upload ang ${imageCount} larawan! Makikita ito ngayon sa iyong Community Feed at Pictures tab.`);
+        // Re-render feed to show new image
+        handleCommunitySearch('*'); // Star as a trick to render all feed content
       } else if (videoCount > 0) {
         alert(`Matagumpay na nai-upload ang ${videoCount} video! Maaari mo itong tingnan sa Videos tab.`);
       }
@@ -1310,6 +1290,9 @@
       // Reset file input
       globalMediaUpload.value = '';
     });
+
+    // Initialize Feed silently in background
+    renderFeed();
 
   </script>
 </body>
